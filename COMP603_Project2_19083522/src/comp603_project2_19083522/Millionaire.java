@@ -1,0 +1,104 @@
+/*
+ * Liam Carter 19083522
+ * COMP603
+ * My program for the assignment is an attempt at a "Who Wants to Be a Millionaire?" game
+ * This is the main class which stores the ten questions in an array as an object the CUI has been given it's own object
+ */
+package comp603_project2_19083522;
+
+public class Millionaire {
+    
+    public QuestionClass[] questions = new QuestionClass[10];
+    public MillionaireIO IO;
+    public int score = 0;
+    public String user;
+    public int lives = 1;
+    public GUI GUI;
+
+    private Lifeline5050 line5050 = new Lifeline5050();
+    private LifelineDD lineDD = new LifelineDD();
+    private LifeLine[] lifeLines = new LifeLine[2];
+
+    public Millionaire(String user)
+    {
+        this.user = user;
+        
+        for(int counter = 0; counter < this.questions.length; counter++)
+        {
+            this.questions[counter] = new QuestionClass(); 
+        }
+
+        for(QuestionClass question : this.questions)
+        {
+            for(QuestionClass comparison : this.questions)
+            {
+                if(compareStrings(question.getQuestion(), comparison.getQuestion()))
+                {
+                    question = new QuestionClass();
+                }
+            }
+        }
+
+        this.lifeLines[0] = this.line5050;
+        this.lifeLines[1] = this.lineDD;
+        
+        //this.setCUI(new QuestionCUI(this.getQuestions(), this));
+        this.IO = new MillionaireIO(user);
+    }
+
+    //Allows for easy way to compare strings whenever it may be needed
+
+    public static boolean compareStrings(String answer, String input)
+    {
+        if(answer.toUpperCase().equals(input.trim().toUpperCase()))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        } 
+    }
+
+     //Asks the user a question and handles wrong and correct answers (This whole method will need to be moved to the GUI)
+    
+    public void askQuestion(int num)
+    {
+
+        while(this.questions[num].getAttempts() > 0)
+        {   
+            //this.CUI.printQuestion(num); This will need to be redone with the GUI class
+
+            //Place Code here for lifelines later
+
+//            if(compareStrings(this.getQuestion(num).getAnswer(), input))
+//            {   
+//                this.getQuestion(num).setAttempts(this.getQuestion(num).getAttempts() - 1);
+//                this.questionCorrect();
+//            }
+
+
+//            else if(!compareStrings(this.getQuestion(num).getAnswer(), input))
+//            {
+//                this.getQuestion(num).setAttempts(this.getQuestion(num).getAttempts() - 1);
+//
+//                if(this.getQuestion(num).getAttempts() > 0)
+//                {
+//                    System.out.println("Incorrect! good thing you used your lifeline!");
+//                }
+//                else
+//                {
+//                    this.questionIncorrect();
+//                }
+//            }
+        }              
+    }
+
+    //following methods handle the game's scoring
+
+    public void addScore()
+    {
+        this.score = this.score + 100000;
+        this.IO.score = this.score;
+    }
+}
