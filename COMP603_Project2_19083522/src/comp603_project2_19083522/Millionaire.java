@@ -14,10 +14,11 @@ public class Millionaire {
     public String user;
     public int lives = 1;
     public GUI GUI;
+    public int QNum = 0; //This number is used to keep track of the questions
 
     private Lifeline5050 line5050 = new Lifeline5050();
     private LifelineDD lineDD = new LifelineDD();
-    private LifeLine[] lifeLines = new LifeLine[2];
+    public LifeLine[] lifeLines = new LifeLine[2];
 
     public Millionaire(String user)
     {
@@ -62,36 +63,17 @@ public class Millionaire {
 
      //Asks the user a question and handles wrong and correct answers (This whole method will need to be moved to the GUI)
     
-    public void askQuestion(int num)
+    public String askQuestion()
     {
-
-        while(this.questions[num].getAttempts() > 0)
-        {   
-            //this.CUI.printQuestion(num); This will need to be redone with the GUI class
-
-            //Place Code here for lifelines later
-
-//            if(compareStrings(this.getQuestion(num).getAnswer(), input))
-//            {   
-//                this.getQuestion(num).setAttempts(this.getQuestion(num).getAttempts() - 1);
-//                this.questionCorrect();
-//            }
-
-
-//            else if(!compareStrings(this.getQuestion(num).getAnswer(), input))
-//            {
-//                this.getQuestion(num).setAttempts(this.getQuestion(num).getAttempts() - 1);
-//
-//                if(this.getQuestion(num).getAttempts() > 0)
-//                {
-//                    System.out.println("Incorrect! good thing you used your lifeline!");
-//                }
-//                else
-//                {
-//                    this.questionIncorrect();
-//                }
-//            }
-        }              
+        return "Question : " + (this.QNum + 1) + " " + this.questions[this.QNum].getQuestion();       
+    }
+    
+    public boolean AnswerQuestion(String input)
+    {
+        if(Millionaire.compareStrings(this.getCurrentQ().answer, input))
+            return true;
+        
+        return false;
     }
 
     //following methods handle the game's scoring
@@ -101,4 +83,12 @@ public class Millionaire {
         this.score = this.score + 100000;
         this.IO.score = this.score;
     }
+    
+    //Getter
+    public QuestionClass getCurrentQ() //Makes it easier to get the current question
+    {
+        return this.questions[this.QNum];
+    }
+    
+    //
 }

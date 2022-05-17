@@ -12,6 +12,7 @@ public class MillionaireIO {
 
     private String user;
     public int score = 0;
+    public String highScores = ""; 
 
     private BufferedReader reader;
     private PrintWriter writer;
@@ -70,6 +71,18 @@ public class MillionaireIO {
                     this.matchFound = true;    
                 }
             }
+            
+            if(this.scores.get(0) != null)
+            {
+                for(int counter = 0; counter < this.scores.size();counter++)
+                {
+                    this.highScores += this.users.get(counter) + " " + this.scores.get(counter) + "\n";
+                }
+            }
+            else
+            {
+                this.highScores = "There are currently no saved highscores.";
+            }
 
             reader.close();
         }
@@ -102,7 +115,7 @@ public class MillionaireIO {
                     }
                 }
             }
-
+            
             for(int counter = 0; counter < this.users.size(); counter++)
             {
                 writer.println(this.users.get(counter) + " " + this.scores.get(counter));
