@@ -16,13 +16,14 @@ public class Millionaire {
     public GUI GUI;
     public int QNum = 0; //This number is used to keep track of the questions
 
-    private Lifeline5050 line5050 = new Lifeline5050();
-    private LifelineDD lineDD = new LifelineDD();
+    private Lifeline5050 line5050;
+    private LifelineDD lineDD;
     public LifeLine[] lifeLines = new LifeLine[2];
 
-    public Millionaire(String user)
+    public Millionaire(String user, GUI gui)
     {
         this.user = user;
+        this.GUI = gui;
         
         for(int counter = 0; counter < this.questions.length; counter++)
         {
@@ -39,16 +40,17 @@ public class Millionaire {
                 }
             }
         }
+        
+        this.line5050 = new Lifeline5050(this.GUI);
+        this.lineDD = new LifelineDD(this.GUI);
 
         this.lifeLines[0] = this.line5050;
         this.lifeLines[1] = this.lineDD;
-        
-        //this.setCUI(new QuestionCUI(this.getQuestions(), this));
+
         this.IO = new MillionaireIO(user);
     }
 
     //Allows for easy way to compare strings whenever it may be needed
-
     public static boolean compareStrings(String answer, String input)
     {
         if(answer.toUpperCase().equals(input.trim().toUpperCase()))
@@ -61,7 +63,7 @@ public class Millionaire {
         } 
     }
 
-     //Asks the user a question and handles wrong and correct answers (This whole method will need to be moved to the GUI)
+    //Asks the user a question and handles wrong and correct answers (This whole method will need to be moved to the GUI)
     
     public String askQuestion()
     {
@@ -89,6 +91,4 @@ public class Millionaire {
     {
         return this.questions[this.QNum];
     }
-    
-    //
 }

@@ -7,10 +7,12 @@ package comp603_project2_19083522;
 
 public abstract class LifeLine {
     
-    private int uses = 1;
+    public int uses = 1;
+    public GUI gui;
 
-    public LifeLine()
+    public LifeLine(GUI gui)
     {
+        this.gui = gui;
     }   
 
     //This is for activating the effect of the lifeline
@@ -18,16 +20,4 @@ public abstract class LifeLine {
 
     //This toString allows for printing each lifeline
     public abstract String toString();
-
-    //setters
-    public void setUses(int uses)
-    {
-        this.uses = uses;
-    }
-
-    //getters
-    public int getUses()
-    {
-        return this.uses;
-    }
 }

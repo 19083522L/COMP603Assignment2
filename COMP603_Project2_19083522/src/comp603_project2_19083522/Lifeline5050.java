@@ -9,24 +9,26 @@ public class Lifeline5050 extends LifeLine{
 
     private String toString = "50/50";
 
-    public Lifeline5050()
+    public Lifeline5050(GUI gui)
     {
-        super();  
+        super(gui);  
     }
 
     @Override
     public void use(int num, QuestionClass q)
     {
-        super.setUses(super.getUses() - 1);
+        super.uses = super.uses - 1;
         
-        System.out.println("Question " + (num + 1) + ": ");
-        System.out.println("");
-        System.out.println(q.getQuestion());
-                
-        System.out.println(q.getAnswer());
-        System.out.println(q.getFalseOption());
-
-        System.out.println("");
+        String options = "";
+        
+        for(int counter = 0; counter < gui.mill.getCurrentQ().options.length; counter++)
+        {
+            options += gui.mill.getCurrentQ().options[counter] + "\n";
+        }
+        
+        gui.label.setText("Question " + (gui.mill.QNum + 1) + ": "+ gui.mill.getCurrentQ() + "\n\n " + gui.mill.getCurrentQ().answer + "\n" + gui.mill.getCurrentQ().falseAnswer);
+        
+        gui.printLifeLines();
     } 
 
     @Override

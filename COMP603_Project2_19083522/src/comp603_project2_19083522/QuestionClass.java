@@ -226,7 +226,6 @@ public class QuestionClass {
     }        
 
     //This is used for picking the second false answer for the question 
-
     public void pickFalseOption(String[] options)
     {
         boolean stop = false;
@@ -236,7 +235,7 @@ public class QuestionClass {
             Random rand = new Random();
             int num = rand.nextInt(4);
             
-            if(!options[num].equals(this.getAnswer()))
+            if(!options[num].equals(this.answer))
             {
                 this.falseAnswer = options[num];
                 stop = true;
@@ -254,16 +253,6 @@ public class QuestionClass {
     public String getQuestion()
     {
         return this.question;
-    }
-
-    public String getAnswer()
-    {
-        return this.answer;
-    }
-
-    public String getFalseOption()
-    {
-        return this.falseAnswer;
     }
 
     public String getOption(int num)

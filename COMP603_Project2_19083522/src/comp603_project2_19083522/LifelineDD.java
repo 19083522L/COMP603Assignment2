@@ -9,15 +9,15 @@ public class LifelineDD extends LifeLine{
 
     private String toString = "Double Dip";
     
-    public LifelineDD()
+    public LifelineDD(GUI gui)
     {
-        super();
+        super(gui);
     }
 
     @Override
     public void use(int num, QuestionClass q)
     {
-        super.setUses(super.getUses() - 1);
+        super.uses = super.uses - 1;
 
         q.attempts = q.attempts + 1;
         System.out.println("Please input your answer. \n");
@@ -28,6 +28,4 @@ public class LifelineDD extends LifeLine{
     {
         return this.toString;
     }
-
-    
 }
