@@ -12,7 +12,8 @@ public class GUI extends JPanel implements ActionListener{
     enum State{
         INTRO,
         QUESTIONS,
-        OUTRO
+        OUTRO,
+        LOSS
     }
     
     private State state = State.INTRO;
@@ -87,6 +88,8 @@ public class GUI extends JPanel implements ActionListener{
         {
             this.state = State.QUESTIONS;
             this.nextQuestion(this.mill.QNum);
+            this.scoreLabel.setVisible(true);
+            this.printLifeLines();
             this.text.setText("");
         }
         
@@ -94,18 +97,50 @@ public class GUI extends JPanel implements ActionListener{
         {
             if(this.mill.compareStrings(this.mill.getCurrentQ().answer, this.text.getText()))
             {
+                this.emergencyLabel.setVisible(false);
                 this.mill.QNum++;   
                 this.text.setText("");
                 this.increaseScore();
             }
-            else if (this.mill.compareStrings(this.mill.lifeLines[0].toString(), this.text.getText()))
+            else if (this.mill.compareStrings(this.mill.lifeLines[0].toString(), this.text.getText())) //50/50
             {
                 if(this.mill.lifeLines[0].uses == 1)
                 {
                     this.mill.lifeLines[0].use(this.mill.QNum, this.mill.getCurrentQ());
+                    this.printLifeLines();
+                    this.toggleEmergencyLabel("You have used the 50/50 lifeline.");
+                }
+            }
+            else if (this.mill.compareStrings(this.mill.lifeLines[1].toString(), this.text.getText()))
+            {
+                if(this.mill.lifeLines[1].uses == 1)
+                {
+                    this.mill.lifeLines[1].use(this.mill.QNum, this.mill.getCurrentQ());
+                    this.printLifeLines();
+                    this.toggleEmergencyLabel("You have used the Double Dip lifeline.");
+                }
+            }
+            else
+            {
+                this.mill.getCurrentQ().attempts--;
+                if(this.mill.getCurrentQ().attempts != 0)
+                {
+                    this.gameLoss();
+                }
+                else if(this.mill.getCurrentQ().attempts > 0)
+                {
+                    this.toggleEmergencyLabel("That is incorrect! good thing you used your lifeline!");
                 }
             }
         }
+    }
+    
+    public void gameLoss()
+    {
+        this.state = State.LOSS;
+        this.label.setText("You are incorrect! your progress has been saved you may try again if you wish, your score: " + this.mill.score);
+        this.mill.IO.write();
+        this.toggleEmergencyLabel("If you want to continue click the enter button, otherwise close the application.");
     }
     
     public void increaseScore()
@@ -157,7 +192,7 @@ public class GUI extends JPanel implements ActionListener{
             options += this.mill.getCurrentQ().options[counter] + "\n";
         }
         
-        this.label.setText("Question " + (this.mill.QNum + 1) + ": "+ this.mill.getCurrentQ() + "\n\n " + options);
+        this.label.setText("Question " + (this.mill.QNum + 1) + ": "+ this.mill.getCurrentQ() + "\n\n" + options);
         
         this.printLifeLines();
     }
