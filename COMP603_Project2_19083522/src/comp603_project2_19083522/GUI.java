@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
 
+//This acts as the main class of the game
 
 public class GUI extends JPanel implements ActionListener{
 
@@ -46,6 +47,7 @@ public class GUI extends JPanel implements ActionListener{
         this.emergencyLabel.setVisible(false);
         
         this.text = new TextField("");
+        this.text.setPreferredSize(new Dimension(200, 10));
         
         //panel settings
         JPanel labelPanel = new JPanel(new BorderLayout());
@@ -61,8 +63,12 @@ public class GUI extends JPanel implements ActionListener{
         bottomPanel.add(this.enterButton, BorderLayout.EAST);
         bottomPanel.add(this.text, BorderLayout.WEST);
         
+        labelPanel.setPreferredSize(new Dimension(300, 100));
+        
         super.add(bottomPanel, BorderLayout.SOUTH);
         super.add(labelPanel, BorderLayout.CENTER);
+        
+        super.setPreferredSize(new Dimension(500, 400));
         
         //Action listeners
         this.enterButton.addActionListener(this);
@@ -72,30 +78,39 @@ public class GUI extends JPanel implements ActionListener{
     public void actionPerformed(ActionEvent e) {
         if((e.getSource() == this.enterButton) && (this.state == State.INTRO) && (this.mill == null))
         {
-            if(Millionaire.compareStrings("", this.text.getText()))
+            if(!this.acceptableName(this.text.getText()))
             {
-                this.toggleEmergencyLabel("Username cannot be empty.");
+                this.toggleEmergencyLabel("Username cannot be empty or include spaces.");
                 return;
             }
+            else
+            {
+                if(this.emergencyLabel.isVisible())
+                    this.emergencyLabel.setVisible(false);
+                this.mill = new Millionaire(this.text.getText(), this);
+                this.printInstructions();
+            }
             
-            if(this.emergencyLabel.isVisible())
-                this.emergencyLabel.setVisible(false);
-            this.mill = new Millionaire(this.text.getText(), this);
-            this.printInstructions();
             this.text.setText("");
         }
+        //This is for starting the game after the instructions have been displayed
         else if((e.getSource() == this.enterButton) && (this.state == State.INTRO) && (this.mill != null))
         {
             this.state = State.QUESTIONS;
             this.nextQuestion(this.mill.QNum);
             this.scoreLabel.setVisible(true);
+            this.emergencyLabel.setVisible(false);
             this.printLifeLines();
             this.text.setText("");
         }
         
+        //This is for printing the questions to the label and handling answers
         if((e.getSource() == this.enterButton) && (this.state == State.QUESTIONS))
         {
-            if(this.mill.compareStrings(this.mill.getCurrentQ().answer, this.text.getText()))
+            this.mill.IO.write();
+            this.printLifeLines();
+            
+            if(this.mill.AnswerQuestion(this.text.getText()))
             {
                 this.emergencyLabel.setVisible(false);
                 this.mill.QNum++;   
@@ -130,8 +145,40 @@ public class GUI extends JPanel implements ActionListener{
                 else if(this.mill.getCurrentQ().attempts > 0)
                 {
                     this.toggleEmergencyLabel("That is incorrect! good thing you used your lifeline!");
+                    this.text.setText("");
                 }
             }
+        }
+        
+        if((e.getSource() == this.enterButton) && (this.state == State.LOSS))
+        {
+            this.toggleEmergencyLabel("Click the enter button again to confirm.");
+            this.state = State.INTRO;
+            String temp = this.mill.user;
+            this.mill = new Millionaire(temp, this);
+        }
+    }
+    
+    //This is needed because the username is not allowed to be empty or include, this is because either can create problems with the read function
+    public boolean acceptableName(String input)
+    {
+        int count = 0;
+        
+        for(char current : input.toCharArray())
+        {
+            if((current == ' ') || (current == Character.MIN_VALUE))
+            {
+                count++;
+            }
+        }
+        
+        if(count == 0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
     
@@ -140,7 +187,7 @@ public class GUI extends JPanel implements ActionListener{
         this.state = State.LOSS;
         this.label.setText("You are incorrect! your progress has been saved you may try again if you wish, your score: " + this.mill.score);
         this.mill.IO.write();
-        this.toggleEmergencyLabel("If you want to continue click the enter button, otherwise close the application.");
+        this.toggleEmergencyLabel("If you want to restart click the enter button, otherwise close the application.");
     }
     
     public void increaseScore()
@@ -156,9 +203,10 @@ public class GUI extends JPanel implements ActionListener{
     
     public void printInstructions()
     {
-        this.label.setText("Welcome to Who wants to Be a Millionaire!\n\nMade by Liam Carter 19083522\n\n--RULES--\n\nThere are 10 questions and you will win once answer all of them correctly\nYou will lose when you get a quesition wrong!"
-        + "Whenever you get a question correct you will have $100,000 added to your total. \nYou will also have 2 lifelines each of which can only be used once, these include: " + 
-        "\n50/50 \nTwo of the incorrect answers will be removed.\nDouble Dip \nYou will have 2 attempts at the current question.\nTo play type in a shown answer or the name of lifeline you want to use and click the enter button \nclick the enter key to start.");
+        this.label.setText("<html>Welcome to Who wants to Be a Millionaire!<br/><br/>Made by Liam Carter 19083522<br/><br/>--RULES--<br/><br/>There are 10 questions and you will win once answer all of them correctly<br/>You will lose when you get a quesition wrong!"
+        + "Whenever you get a question correct you will have $100,000 added to your total. <br/>You will also have 2 lifelines each of which can only be used once, these include: " + 
+        "<br/>50/50<br/>Two of the incorrect answers will be removed.<br/>Double Dip <br/>You will have 2 attempts at the current question.<br/>To play type in a shown answer or the name of lifeline you want to use and click the enter button:" + 
+            "<br/>Click the enter key to start.</html>");
         
         this.printLifeLines();
     }
@@ -198,7 +246,7 @@ public class GUI extends JPanel implements ActionListener{
     }
     
     public static void main(String[] args) {
-        JFrame frame = new JFrame("HotPlate");
+        JFrame frame = new JFrame("Who wants to be a Millionaire!");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().add(new GUI());
         frame.pack();
