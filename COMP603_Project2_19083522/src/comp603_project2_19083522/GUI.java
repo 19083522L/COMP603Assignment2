@@ -208,7 +208,15 @@ public class GUI extends JPanel implements ActionListener{
         "<br/>50/50<br/>Two of the incorrect answers will be removed.<br/>Double Dip <br/>You will have 2 attempts at the current question.<br/>To play type in a shown answer or the name of lifeline you want to use and click the enter button:" + 
             "<br/>Click the enter key to start.</html>");
         
-        this.printLifeLines();
+        this.printHighScores();
+    }
+    
+    public void printHighScores()
+    {
+        String input = this.mill.IO.highScores;
+        
+        this.scoreLabel.setVisible(true);
+        this.scoreLabel.setText(input);
     }
     
     public void printLifeLines()

@@ -12,7 +12,7 @@ public class MillionaireIO {
 
     private String user;
     public int score = 0;
-    public String highScores = ""; 
+    public String highScores = "<html>"; 
 
     private BufferedReader reader;
     private PrintWriter writer;
@@ -72,12 +72,13 @@ public class MillionaireIO {
                 }
             }
             
-            if(this.scores.get(0) != null)
+            if(!this.users.isEmpty())
             {
                 for(int counter = 0; counter < this.scores.size();counter++)
                 {
-                    this.highScores += this.users.get(counter) + " " + this.scores.get(counter) + "\n";
+                    this.highScores += this.users.get(counter) + " " + this.scores.get(counter) + "<br/>";
                 }
+                this.highScores += "</html>";
             }
             else
             {
