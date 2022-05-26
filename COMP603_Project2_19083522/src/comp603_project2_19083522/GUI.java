@@ -2,8 +2,7 @@
 package comp603_project2_19083522;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import javax.swing.*;
 
 //This acts as the main class of the game
@@ -129,6 +128,12 @@ public class GUI extends JPanel implements ActionListener{
                     this.toggleEmergencyLabel("You have used the 50/50 lifeline.");
                     this.text.setText("");                   
                 }
+                else
+                {
+                    this.label.setText("");
+                    this.printLifeLines();
+                    this.toggleEmergencyLabel("You have already used the 50/50 lifeline.");
+                }
             }
             else if (this.mill.compareStrings(this.mill.lifeLines[1].toString(), this.text.getText()))
             {
@@ -139,15 +144,35 @@ public class GUI extends JPanel implements ActionListener{
                     this.toggleEmergencyLabel("You have used the Double Dip lifeline.");
                     this.text.setText("");    
                 }
+                else
+                {
+                    this.label.setText("");
+                    this.printLifeLines();
+                    this.toggleEmergencyLabel("You have already used the Double Dip lifeline.");
+                }
             }
             else
             {
                 this.mill.getCurrentQ().attempts--;
-                if(this.mill.getCurrentQ().attempts != 0)
+                //There are multiple ifs required for the first and non-first questions (There is a problem that will cause the player to instantly lose if they use the same criteria, 
+                //the only fix for this too either have a state for the first question or too have some other way of distinguishing between the two)
+                
+                //For the fisrt question logic
+                if((this.mill.getCurrentQ().attempts < 0) && (this.mill.QNum == 0))
                 {
                     this.gameLoss();
                 }
-                else if(this.mill.getCurrentQ().attempts > 0)
+                else if((this.mill.getCurrentQ().attempts == 0) && (this.mill.lifeLines[1].uses == 0))
+                {
+                    this.toggleEmergencyLabel("That is incorrect! good thing you used your lifeline!");
+                    this.text.setText("");
+                }
+                //Non first question logic
+                else if((this.mill.getCurrentQ().attempts == 0) && (this.mill.QNum != 0))
+                {
+                    this.gameLoss();
+                }
+                else if((this.mill.getCurrentQ().attempts == 1) && (this.mill.QNum != 0) && (this.mill.lifeLines[1].uses == 0))
                 {
                     this.toggleEmergencyLabel("That is incorrect! good thing you used your lifeline!");
                     this.text.setText("");
@@ -188,8 +213,8 @@ public class GUI extends JPanel implements ActionListener{
     public void gameLoss()
     {
         this.state = State.LOSS;
-        this.label.setText("<html>You are incorrect! your progress has been saved.<br/> You may try again if you wish, your score is: " + this.mill.score + "</html>");
         this.mill.IO.write();
+        this.label.setText("<html>You are incorrect! your progress has been saved.<br/> You may try again if you wish, your score is: " + this.mill.score + "</html>");
         this.toggleEmergencyLabel("If you want to restart click the enter button, otherwise close the application.");
         this.text.setText("");
     }
@@ -263,6 +288,14 @@ public class GUI extends JPanel implements ActionListener{
         JFrame frame = new JFrame("Who wants to be a Millionaire!");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().add(new GUI());
+        frame.addWindowListener(new WindowAdapter() {
+            
+            @Override
+            public void windowClosed(WindowEvent e)
+            {
+                frame.getContentPane().getComponent(0);
+            }
+        });
         frame.pack();
         frame.setVisible(true);
         frame.setResizable(false);
