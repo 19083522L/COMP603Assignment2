@@ -81,6 +81,7 @@ public class GUI extends JPanel implements ActionListener{
             if(!this.acceptableName(this.text.getText()))
             {
                 this.toggleEmergencyLabel("Username cannot be empty or include spaces.");
+                this.text.setText("");
                 return;
             }
             else
@@ -97,7 +98,7 @@ public class GUI extends JPanel implements ActionListener{
         else if((e.getSource() == this.enterButton) && (this.state == State.INTRO) && (this.mill != null))
         {
             this.state = State.QUESTIONS;
-            this.nextQuestion(this.mill.QNum);
+            this.nextQuestion();
             this.scoreLabel.setVisible(true);
             this.emergencyLabel.setVisible(false);
             this.printLifeLines();
@@ -114,8 +115,10 @@ public class GUI extends JPanel implements ActionListener{
             {
                 this.emergencyLabel.setVisible(false);
                 this.mill.QNum++;   
+                this.nextQuestion();                
                 this.text.setText("");
                 this.increaseScore();
+                this.printLifeLines();
             }
             else if (this.mill.compareStrings(this.mill.lifeLines[0].toString(), this.text.getText())) //50/50
             {
@@ -162,32 +165,31 @@ public class GUI extends JPanel implements ActionListener{
     //This is needed because the username is not allowed to be empty or include, this is because either can create problems with the read function
     public boolean acceptableName(String input)
     {
-        int count = 0;
+        int num = input.length();
         
-        for(char current : input.toCharArray())
-        {
-            if((current == ' ') || (current == Character.MIN_VALUE))
-            {
-                count++;
-            }
-        }
-        
-        if(count == 0)
-        {
-            return true;
-        }
-        else
+        if(num == 0)
         {
             return false;
         }
+        
+        for(int counter = 0; counter < input.length(); counter++)
+        {
+            if(input.charAt(counter) == ' ')
+            {
+                return false;
+            }
+        }
+        
+        return true;
     }
     
     public void gameLoss()
     {
         this.state = State.LOSS;
-        this.label.setText("You are incorrect! your progress has been saved you may try again if you wish, your score: " + this.mill.score);
+        this.label.setText("<html>You are incorrect! your progress has been saved.<br/> You may try again if you wish, your score is: " + this.mill.score + "</html>");
         this.mill.IO.write();
         this.toggleEmergencyLabel("If you want to restart click the enter button, otherwise close the application.");
+        this.text.setText("");
     }
     
     public void increaseScore()
@@ -206,7 +208,7 @@ public class GUI extends JPanel implements ActionListener{
         this.label.setText("<html>Welcome to Who wants to Be a Millionaire!<br/><br/>Made by Liam Carter 19083522<br/><br/>--RULES--<br/><br/>There are 10 questions and you will win once answer all of them correctly<br/>You will lose when you get a quesition wrong!"
         + "Whenever you get a question correct you will have $100,000 added to your total. <br/>You will also have 2 lifelines each of which can only be used once, these include: " + 
         "<br/>50/50<br/>Two of the incorrect answers will be removed.<br/>Double Dip <br/>You will have 2 attempts at the current question.<br/>To play type in a shown answer or the name of lifeline you want to use and click the enter button:" + 
-            "<br/>Click the enter key to start.</html>");
+            "<br/>Click the enter button to start.</html>");
         
         this.printHighScores();
     }
@@ -239,16 +241,18 @@ public class GUI extends JPanel implements ActionListener{
         }
     }
     
-    public void nextQuestion(int num)
+    public void nextQuestion()
     {
         String options = "";
         
         for(int counter = 0; counter < this.mill.getCurrentQ().options.length; counter++)
         {
-            options += this.mill.getCurrentQ().options[counter] + "\n";
+            options += "<html> " + this.mill.getCurrentQ().options[counter] + "<br/>";
         }
         
-        this.label.setText("Question " + (this.mill.QNum + 1) + ": "+ this.mill.getCurrentQ() + "\n\n" + options);
+        options += "</html>";
+        
+        this.label.setText("<html>Question " + (this.mill.QNum + 1) + ": "+ this.mill.getCurrentQ().getQuestion() + "<br/><br/>" + options + "</html>");
         
         this.printLifeLines();
     }
