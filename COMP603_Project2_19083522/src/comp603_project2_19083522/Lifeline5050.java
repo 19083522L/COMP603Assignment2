@@ -18,17 +18,8 @@ public class Lifeline5050 extends LifeLine{
     public void use(int num, QuestionClass q)
     {
         super.uses = super.uses - 1;
-        
-        String options = "";
-        
-        for(int counter = 0; counter < gui.mill.getCurrentQ().options.length; counter++)
-        {
-            options += gui.mill.getCurrentQ().options[counter] + "\n";
-        }
-        
-        gui.label.setText("Question " + (gui.mill.QNum + 1) + ": "+ gui.mill.getCurrentQ() + "\n\n " + gui.mill.getCurrentQ().answer + "\n" + gui.mill.getCurrentQ().falseAnswer);
-        
-        gui.printLifeLines();
+
+        gui.label.setText("<html>Question " + (gui.mill.QNum + 1) + ": "+ q.getQuestion() + "<br/><br/>" + q.answer + "<br?>" + q.falseAnswer + "</html>");
     } 
 
     @Override

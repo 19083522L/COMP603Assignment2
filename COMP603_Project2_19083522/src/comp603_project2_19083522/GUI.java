@@ -109,15 +109,15 @@ public class GUI extends JPanel implements ActionListener{
         if((e.getSource() == this.enterButton) && (this.state == State.QUESTIONS))
         {
             this.mill.IO.write();
-            this.printLifeLines();
+            this.printLifeLines();        
             
             if(this.mill.AnswerQuestion(this.text.getText()))
             {
                 this.emergencyLabel.setVisible(false);
                 this.mill.QNum++;   
                 this.nextQuestion();                
-                this.text.setText("");
                 this.increaseScore();
+                this.text.setText("");    
                 this.printLifeLines();
             }
             else if (this.mill.compareStrings(this.mill.lifeLines[0].toString(), this.text.getText())) //50/50
@@ -127,6 +127,7 @@ public class GUI extends JPanel implements ActionListener{
                     this.mill.lifeLines[0].use(this.mill.QNum, this.mill.getCurrentQ());
                     this.printLifeLines();
                     this.toggleEmergencyLabel("You have used the 50/50 lifeline.");
+                    this.text.setText("");                   
                 }
             }
             else if (this.mill.compareStrings(this.mill.lifeLines[1].toString(), this.text.getText()))
@@ -136,6 +137,7 @@ public class GUI extends JPanel implements ActionListener{
                     this.mill.lifeLines[1].use(this.mill.QNum, this.mill.getCurrentQ());
                     this.printLifeLines();
                     this.toggleEmergencyLabel("You have used the Double Dip lifeline.");
+                    this.text.setText("");    
                 }
             }
             else
@@ -229,15 +231,15 @@ public class GUI extends JPanel implements ActionListener{
         }
         else if(this.mill.lifeLines[0].uses == 1)
         {
-            this.scoreLabel.setText("Score: $" + this.mill.score + "Remaining Lifelines: " + this.mill.lifeLines[1]);
+            this.scoreLabel.setText("Score: $" + this.mill.score + " Remaining Lifelines: " + this.mill.lifeLines[0]);
         }
         else if(this.mill.lifeLines[1].uses == 1)
         {
-            this.scoreLabel.setText("Score: $" + this.mill.score + "Remaining Lifelines: " + this.mill.lifeLines[0]);
+            this.scoreLabel.setText("Score: $" + this.mill.score + " Remaining Lifelines: " + this.mill.lifeLines[1]);
         }
         else
         {
-            this.scoreLabel.setText("Score: $" + this.mill.score + "Remaining Lifelines: No lifelines left!");
+            this.scoreLabel.setText("Score: $" + this.mill.score + " Remaining Lifelines: No lifelines left!");
         }
     }
     
