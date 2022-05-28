@@ -182,7 +182,6 @@ public class GUI extends JPanel implements ActionListener{
         
         if((e.getSource() == this.enterButton) && (this.state == State.LOSS))
         {
-            this.toggleEmergencyLabel("Click the enter button again to confirm.");
             this.state = State.INTRO;
             String temp = this.mill.user;
             this.mill = new Millionaire(temp, this);
@@ -212,16 +211,17 @@ public class GUI extends JPanel implements ActionListener{
     
     public void gameLoss()
     {
+        
         this.state = State.LOSS;
-        this.mill.IO.write();
         this.label.setText("<html>You are incorrect! your progress has been saved.<br/> You may try again if you wish, your score is: " + this.mill.score + "</html>");
         this.toggleEmergencyLabel("If you want to restart click the enter button, otherwise close the application.");
         this.text.setText("");
+        this.mill.IO.write();  
     }
     
     public void increaseScore()
     {
-        this.mill.score = this.mill.score + 100000;
+        this.mill.addScore();
     }
     
     public void toggleEmergencyLabel(String output)//Used displays an error message when something goes wrong
@@ -282,22 +282,5 @@ public class GUI extends JPanel implements ActionListener{
         this.label.setText("<html>Question " + (this.mill.QNum + 1) + ": "+ this.mill.getCurrentQ().getQuestion() + "<br/><br/>" + options + "</html>");
         
         this.printLifeLines();
-    }
-    
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("Who wants to be a Millionaire!");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.getContentPane().add(new GUI());
-        frame.addWindowListener(new WindowAdapter() {
-            
-            @Override
-            public void windowClosed(WindowEvent e)
-            {
-                frame.getContentPane().getComponent(0);
-            }
-        });
-        frame.pack();
-        frame.setVisible(true);
-        frame.setResizable(false);
     }
 }
