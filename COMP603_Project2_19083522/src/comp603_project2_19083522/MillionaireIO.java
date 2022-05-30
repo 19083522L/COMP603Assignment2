@@ -15,11 +15,9 @@ public class MillionaireIO {
     public String highScores = "<html>"; 
 
     private BufferedReader reader;
-    private PrintWriter writer;
 
     private ArrayList<String> users;
     private ArrayList<Integer> scores;
-    private boolean matchFound =  false;
     
     public MillionaireIO(String user)
     {
@@ -31,7 +29,6 @@ public class MillionaireIO {
         {
             this.reader = new BufferedReader(new FileReader("./resources/Carter_19083522_COMP603_USERS.txt"));
             this.read();
-            this.writer = new PrintWriter(new FileOutputStream("./resources/Carter_19083522_COMP603_USERS.txt"));
         }
 
         catch(IOException e)
@@ -39,9 +36,10 @@ public class MillionaireIO {
             System.out.println("No USERS file found! creating one now!");
             try
             {
-                this.writer = new PrintWriter(new FileOutputStream("./resources/Carter_19083522_COMP603_USERS.txt"));
+                PrintWriter writer = new PrintWriter(new FileOutputStream("./resources/Carter_19083522_COMP603_USERS.txt"));
                 this.reader = new BufferedReader(new FileReader("./resources/Carter_19083522_COMP603_USERS.txt"));  
                 this.read();     
+                writer.close();
             }
             catch(Exception i)
             {
@@ -62,14 +60,6 @@ public class MillionaireIO {
 
                 this.scores.add(Integer.parseInt(splitLine[1]));
                 this.users.add(splitLine[0]);
-            }
-
-            for(String user : this.users)    
-            {
-                if(Millionaire.compareStrings(user, this.user))
-                {
-                    this.matchFound = true;    
-                }
             }
             
             if(!this.users.isEmpty())
@@ -92,13 +82,30 @@ public class MillionaireIO {
         }
     }
 
+    public boolean matchFound()
+    {
+        this.read();
+
+        for(String user : this.users)    
+        {
+            if(Millionaire.compareStrings(user, this.user))
+            {
+                return true;    
+            }
+        }
+        
+        return false;
+    }
+
     //used for writing the current arrays into the values
 
     public void write()
     {
         try
         {
-            if(!this.matchFound)
+            PrintWriter writer = new PrintWriter(new FileOutputStream("./resources/Carter_19083522_COMP603_USERS.txt"));
+
+            if(!this.matchFound())
             {
                 this.users.add(this.user);
                 this.scores.add(score);

@@ -20,14 +20,14 @@ public class Millionaire {
     private LifelineDD lineDD;
     public LifeLine[] lifeLines = new LifeLine[2];
 
-    public Millionaire(String user, GUI gui)
+    public Millionaire(String user, GUI gui, DataBase db)
     {
         this.user = user;
         this.GUI = gui;
         
         for(int counter = 0; counter < this.questions.length; counter++)
         {
-            this.questions[counter] = new QuestionClass(); 
+            this.questions[counter] = new QuestionClass(db); 
         }
 
         for(QuestionClass question : this.questions)
@@ -36,7 +36,7 @@ public class Millionaire {
             {
                 if(compareStrings(question.getQuestion(), comparison.getQuestion()))
                 {
-                    question = new QuestionClass();
+                    question = new QuestionClass(db);
                 }
             }
         }

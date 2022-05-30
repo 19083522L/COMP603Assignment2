@@ -12,12 +12,12 @@ public class GUI extends JPanel implements ActionListener{
     enum State{
         INTRO,
         QUESTIONS,
-        OUTRO,
         LOSS
     }
     
     private State state = State.INTRO;
     public Millionaire mill;
+    public DataBase db;
     
     //Buttons
     public JButton enterButton; //Used for input what is currently in the text field
@@ -33,6 +33,14 @@ public class GUI extends JPanel implements ActionListener{
     public GUI()
     {   
         super(new BorderLayout());
+        try
+        {
+            this.db = new DataBase();
+        }
+        catch(ClassNotFoundException e)
+        {
+            System.err.println("Exception: " + e.getMessage());
+        }   
         
         //Component Intialization
         this.enterButton = new JButton("Enter");
@@ -87,7 +95,7 @@ public class GUI extends JPanel implements ActionListener{
             {
                 if(this.emergencyLabel.isVisible())
                     this.emergencyLabel.setVisible(false);
-                this.mill = new Millionaire(this.text.getText(), this);
+                this.mill = new Millionaire(this.text.getText(), this, this.db);
                 this.printInstructions();
             }
             
@@ -113,11 +121,18 @@ public class GUI extends JPanel implements ActionListener{
             if(this.mill.AnswerQuestion(this.text.getText()))
             {
                 this.emergencyLabel.setVisible(false);
-                this.mill.QNum++;   
-                this.nextQuestion();                
+                this.mill.QNum++; 
                 this.increaseScore();
                 this.text.setText("");    
                 this.printLifeLines();
+                if(this.mill.score == 1000000)
+                {
+                    this.gameWon();
+                }  
+                else
+                {
+                    this.nextQuestion(); 
+                }               
             }
             else if (this.mill.compareStrings(this.mill.lifeLines[0].toString(), this.text.getText())) //50/50
             {
@@ -184,7 +199,7 @@ public class GUI extends JPanel implements ActionListener{
         {
             this.state = State.INTRO;
             String temp = this.mill.user;
-            this.mill = new Millionaire(temp, this);
+            this.mill = new Millionaire(temp, this, this.db);
         }
     }
     
@@ -211,12 +226,20 @@ public class GUI extends JPanel implements ActionListener{
     
     public void gameLoss()
     {
-        
         this.state = State.LOSS;
         this.label.setText("<html>You are incorrect! your progress has been saved.<br/> You may try again if you wish, your score is: " + this.mill.score + "</html>");
         this.toggleEmergencyLabel("If you want to restart click the enter button, otherwise close the application.");
         this.text.setText("");
         this.mill.IO.write();  
+    }
+
+    public void gameWon()
+    {
+        this.state = State.LOSS;
+        this.label.setText("<html>Congratulations! you have won Who wants to be a Millionaire! your progress has been saved.<br/> You may try again if you wish, your score is: " + this.mill.score + "</html>");
+        this.toggleEmergencyLabel("If you want to restart click the enter button, otherwise close the application.");
+        this.text.setText("");
+        this.mill.IO.write();
     }
     
     public void increaseScore()

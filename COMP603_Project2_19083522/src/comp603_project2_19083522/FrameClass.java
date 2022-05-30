@@ -29,7 +29,8 @@ public class FrameClass extends JFrame implements WindowListener{
     @Override
     public void windowClosing(WindowEvent e)
     {        
-        
+        if(gui.mill != null)
+            this.gui.mill.IO.write();
     }
 
     @Override
