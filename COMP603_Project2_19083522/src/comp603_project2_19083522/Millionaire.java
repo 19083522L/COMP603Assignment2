@@ -1,8 +1,8 @@
 /*
  * Liam Carter 19083522
  * COMP603
- * My program for the assignment is an attempt at a "Who Wants to Be a Millionaire?" game
- * This is the main class which stores the ten questions in an array as an object the CUI has been given it's own object
+ * This was the main class for the previous iteration but is mainly used now for managing old classes that were re-used
+ * (although all of the original classes have needed to be adjsuted)
  */
 package comp603_project2_19083522;
 

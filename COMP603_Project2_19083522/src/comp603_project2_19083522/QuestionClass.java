@@ -27,6 +27,7 @@ public class QuestionClass {
     }   
 
     //This method is used for deciding which out of the preset questions is used for this object
+    //This class also needed significant changes to accomodate the new database, which stores all of the questions
 
     public void makeQuestion()
     {

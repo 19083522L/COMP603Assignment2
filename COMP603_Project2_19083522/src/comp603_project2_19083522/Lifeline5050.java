@@ -1,7 +1,7 @@
 /*
  * Liam Carter 19083522
  * COMP603
- * This works by printing the answer and the selected false answer
+ * This class updates the text of the label with fewer options always including the correct answer
  */
 package comp603_project2_19083522;
 

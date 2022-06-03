@@ -5,11 +5,12 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-//This acts as the main class of the game
+//Liam Carter 19083522 COMP603
+//This controls a lot of the behind the scenes and visual components of the game 
 
 public class GUI extends JPanel implements ActionListener{
 
-    enum State{
+    enum State{ //How the game treats the players inputs is entirely depended on these states
         INTRO,
         QUESTIONS,
         LOSS
@@ -62,10 +63,6 @@ public class GUI extends JPanel implements ActionListener{
         labelPanel.add(this.scoreLabel, BorderLayout.CENTER);
         labelPanel.add(this.emergencyLabel, BorderLayout.SOUTH);
         
-//        JPanel buttonPanel = new JPanel(new BorderLayout());
-//        buttonPanel.add(this.toggleButton, BorderLayout.NORTH);
-//        buttonPanel.add(this.enterButton, BorderLayout.SOUTH);
-        
         JPanel bottomPanel = new JPanel(new BorderLayout());
         bottomPanel.add(this.enterButton, BorderLayout.EAST);
         bottomPanel.add(this.text, BorderLayout.WEST);
@@ -83,6 +80,9 @@ public class GUI extends JPanel implements ActionListener{
     
     @Override
     public void actionPerformed(ActionEvent e) {
+        //First thing the user will see is a prompt for an acceptable username 
+        //The program waits to create a millionaire class since a username is required for the millionaire constructor 
+        //and would otherwise require a total rewrite of the Millioaire code
         if((e.getSource() == this.enterButton) && (this.state == State.INTRO) && (this.mill == null))
         {
             if(!this.acceptableName(this.text.getText()))
@@ -118,14 +118,14 @@ public class GUI extends JPanel implements ActionListener{
             this.mill.IO.write();
             this.printLifeLines();        
             
-            if(this.mill.AnswerQuestion(this.text.getText()))
+            if(this.mill.AnswerQuestion(this.text.getText()))//For answer handling
             {
                 this.emergencyLabel.setVisible(false);
                 this.mill.QNum++; 
                 this.increaseScore();
                 this.text.setText("");    
                 this.printLifeLines();
-                if(this.mill.score == 1000000)
+                if(this.mill.score == 1000000) //two different methods are used if the player wins or loses, functionally they are the same just with different messages
                 {
                     this.gameWon();
                 }  
@@ -134,6 +134,7 @@ public class GUI extends JPanel implements ActionListener{
                     this.nextQuestion(); 
                 }               
             }
+            //The following else ifs are for determining if the user entered a lifeline
             else if (this.mill.compareStrings(this.mill.lifeLines[0].toString(), this.text.getText())) //50/50
             {
                 if(this.mill.lifeLines[0].uses == 1)
@@ -166,6 +167,7 @@ public class GUI extends JPanel implements ActionListener{
                     this.toggleEmergencyLabel("You have already used the Double Dip lifeline.");
                 }
             }
+            //The default else is for if the player gets an answer wrong
             else
             {
                 this.mill.getCurrentQ().attempts--;
@@ -194,7 +196,7 @@ public class GUI extends JPanel implements ActionListener{
                 }
             }
         }
-        
+        //This finally is for restarting the game after losing or winning
         if((e.getSource() == this.enterButton) && (this.state == State.LOSS))
         {
             this.state = State.INTRO;
@@ -203,7 +205,7 @@ public class GUI extends JPanel implements ActionListener{
         }
     }
     
-    //This is needed because the username is not allowed to be empty or include, this is because either can create problems with the read function
+    //This is needed because the username is not allowed to be empty or include spaces, this is because either can create problems with the read function
     public boolean acceptableName(String input)
     {
         int num = input.length();
@@ -247,12 +249,13 @@ public class GUI extends JPanel implements ActionListener{
         this.mill.addScore();
     }
     
-    public void toggleEmergencyLabel(String output)//Used displays an error message when something goes wrong
+    public void toggleEmergencyLabel(String output)//Originally used to display error messages, but is also used for other messages of importance
     {
         this.emergencyLabel.setText(output);
         this.emergencyLabel.setVisible(true);
     }
     
+    //print methods
     public void printInstructions()
     {
         this.label.setText("<html>Welcome to Who wants to Be a Millionaire!<br/><br/>Made by Liam Carter 19083522<br/><br/>--RULES--<br/><br/>There are 10 questions and you will win once answer all of them correctly<br/>You will lose when you get a quesition wrong!"
@@ -291,6 +294,8 @@ public class GUI extends JPanel implements ActionListener{
         }
     }
     
+    //This for getting the question and preparing it for the GUI
+
     public void nextQuestion()
     {
         String options = "";

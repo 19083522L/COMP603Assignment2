@@ -3,13 +3,16 @@ package comp603_project2_19083522;
 
 import java.sql.*;
 
+//Liam Carter 19083522 COMP603
+//This class manages everything to do with the database such as reading and writing
+
 public class DataBase {
 
     private String table;
 
     public Connection conn;
 
-    public DataBase() throws ClassNotFoundException
+    public DataBase() throws ClassNotFoundException 
     {
         this.table = "CREATE  TABLE QUESTIONS  (QNUM  INT,   QUESTION   VARCHAR(300),   ANSWER1   VARCHAR(20), ANSWER2   VARCHAR(20), ANSWER3   VARCHAR(20), ANSWER4   VARCHAR(20), CANSWER VARCHAR(20))"; 
 
@@ -17,7 +20,7 @@ public class DataBase {
         this.createTable();
     }
 
-    public ResultSet queryDB(String sql)
+    public ResultSet queryDB(String sql) //Takes in a statment and queries the database, made this so wouldn't need to repeat code
     {
         Statement smt;
         ResultSet rs = null;
@@ -35,13 +38,13 @@ public class DataBase {
         return rs;
     }
 
-    public void createTable()
+    public void createTable() //The table uses many prepared statements to make construction faster 
     {
         try
         {
             Statement statement = this.conn.createStatement();
             
-            if(this.tableExists("QUESTIONS"))
+            if(this.tableExists("QUESTIONS"))//This is just here to prevent any with creating a table
             {
                 statement.executeUpdate("DROP TABLE QUESTIONS");
             }
@@ -254,7 +257,7 @@ public class DataBase {
                 this.queryDB("SELECT * FROM QUESTIONS");
                 ResultSet rs = stm.executeQuery("SELECT * FROM QUESTIONS");
 
-                while(rs.next())    
+                while(rs.next())//This was made so I could monitor the question creation process     
                 {
                     int num = rs.getInt("QNUM");
                     String question = rs.getString("QUESTION");
@@ -271,9 +274,9 @@ public class DataBase {
             {
                 Statement stm = this.conn.createStatement();
 
-                ResultSet rs = stm.executeQuery("SELECT * FROM QUESTIONS");
+                ResultSet rs = stm.executeQuery("SELECT * FROM QUESTIONS"); 
 
-                while(rs.next())    
+                while(rs.next())//This was made so I could monitor the question creation process      
                 {
                     int num = rs.getInt("QNUM");
                     String question = rs.getString("QUESTION");
@@ -294,7 +297,7 @@ public class DataBase {
         }
     }
 
-    public boolean tableExists(String tableName)
+    public boolean tableExists(String tableName)//Used for testing the table creation
     {
         try
         {
@@ -311,7 +314,7 @@ public class DataBase {
         return false;   
     }   
 
-    private void getConnection()
+    private void getConnection()//Most important piece of this class, used establishing a connection between the embedded database or creating a new one
     {
         try
         {

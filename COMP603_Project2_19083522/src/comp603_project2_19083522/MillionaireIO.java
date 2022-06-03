@@ -97,7 +97,9 @@ public class MillionaireIO {
         return false;
     }
 
-    //used for writing the current arrays into the values
+    //used for writing the current arrays into the values, this method needed be almost rewritten entirely since before it was only intended to be used once,
+    //this created issues when trying to save multiple times so it was changed to have the writer variable be local the method and just create a new one instead of re-using the
+    //same writer 
 
     public void write()
     {
