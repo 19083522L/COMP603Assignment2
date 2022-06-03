@@ -318,7 +318,6 @@ public class DataBase {
     {
         try
         {
-            Class.forName("org.apache.derby.jdbc.EmbeddedDriver");
             this.conn = DriverManager.getConnection("jdbc:derby:Assignment2DB_Ebd;create=true");
         }
         catch(SQLException e)
@@ -326,10 +325,5 @@ public class DataBase {
             System.err.println("SQLException: " + e.getMessage());
             e.printStackTrace();
         }
-        catch(ClassNotFoundException e)
-        {
-            System.err.println("Exception: " + e.getMessage());
-            e.printStackTrace();
-        }   
     }
 }
